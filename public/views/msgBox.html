@@ -11,6 +11,7 @@
    
     <link rel="stylesheet" href="index.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js" integrity="sha512-Z6C1p1NIexPj5MsVUunW4pg7uMX6/TT3CUVldmjXx2kpip1eZcrAnxIusDxyFIikyM9A61zOVNgvLr/TGudOQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   
 </head>
@@ -27,15 +28,28 @@
         <div class="container message right">Vinay :  ha bol , kooch nhi </div>
      </div>
      <div class="send">
-        <form action="#" id="send-container">
-              <input type="text" name="messageInp" id="messageInp">
+        <form action="msg-send" method="post" id="send-container" onsubmit="msgAuth()">
+              <input type="text" name="message" id="messageInp">
               <button class="btn " type="submit">Send</button>
         </form>
      </div>
-     <script src="">
-          
-           const socket = io();
-     </script>
+     <script>
+         function msgAuth(){
+             const token = localStorage.getItem('token');
+            const message = document.getElementById('messageInp').value;
+             axios.post('http://localhost:4000/msg-send',{message},{headers:{"Authorization": token}})
+             .then((Response) =>{
+                   if(Response.data.success === true){
+                     window.location.reload();
+                   }
+             })
+             .catch((err)=>{
+               console.log(err)
+             })
 
+
+         }
+     </script>
+    
 </body>
 </html>

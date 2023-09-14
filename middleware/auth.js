@@ -17,9 +17,12 @@ exports.authentication = (req,res,next) => {
 
                          next();
                    })
+                   .catch((err) =>{
+                        console.log(err)
+                   })
                     
              } catch (error) {
-                   console.log(error,'Middleware error');
+                   console.log('Middleware error');
              }
    };
 
