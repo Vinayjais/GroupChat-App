@@ -7,6 +7,8 @@ const vchatRouter = require('./routers/vchat');
 const sequelize = require('./util/database');
 const User = require('./models/user')
 const Message = require('./models/message');
+const Group = require('./models/group');
+const userGroup = require('./models/userGroup');
 const msgRouter = require('./routers/message')
 const port = 4000;
 const app = express();
@@ -26,6 +28,18 @@ app.use(msgRouter);
 
 User.hasMany(Message);
 Message.belongsTo(User);
+Group.hasMany(Message);
+Message.belongsTo(Group);
+
+User.hasMany(Group);
+Group.belongsTo(User);
+
+User.hasMany(userGroup);
+userGroup.belongsTo(User);
+Group.hasMany(userGroup);
+userGroup.belongsTo(Group);
+
+
 
 app.get('*',(req,res) =>{
          res.send('Page Not Found ')
