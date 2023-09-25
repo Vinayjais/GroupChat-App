@@ -33,7 +33,7 @@
 
          </div>
         <div class="container msg-box" >
-            <div class=" chatBoxHeader"><h5 id="headGroupName" >GroupName </h5><div><button onclick="AddUserInGroup()">Add</button><button id="viewBtn" onclick="seeUserInGroup()">See</button></div></div>
+            <div class=" chatBoxHeader"><h5 id="headGroupName" > </h5><div><button onclick="AddUserInGroup()">Add</button><button id="viewBtn" onclick="seeUserInGroup()">See</button></div></div>
            
             <div id="Box">
                 
@@ -88,9 +88,9 @@
             const message = document.getElementById('messageInp').value;
              axios.post('http://localhost:4000/msg-send',{message, groupId},{headers:{"Authorization": token}})
              .then((Response) =>{
-                 //  if(Response.data.success === true){
-                //    window.location.reload();
-                 //  }
+                   if(Response.data.success === true){
+                   window.location.reload();
+                   }
 
                   document.getElementById('messageInp').value = ' ';
                 

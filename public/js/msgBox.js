@@ -2,14 +2,15 @@
 
 
 window.addEventListener('DOMContentLoaded', ()=>{
-   // fetchData();
+    fetchData();
     GroupinPanel();
 });
 
- /*setInterval( async() => {
+ setInterval( async() => {
 
   const token = localStorage.getItem('token');
-  await axios.get('http://localhost:4000/get-msg',{headers:{"Authorization": token}})
+  const groupid = localStorage.getItem('current_groupId');
+  await axios.get('http://localhost:4000/get-msg',{headers:{"Authorization": token, "GroupId": groupid}})
   .then((response) =>{
    console.log(response);
        const message = response.data.messages;
@@ -33,7 +34,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
      console.log(err)
   })
   
-}, 1000);*/
+}, 1000);
 
 
 async function fetchData(){
