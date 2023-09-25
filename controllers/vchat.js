@@ -1,6 +1,7 @@
 const path = require('path');
 const Group = require('../models/group');
 const UsersInGroups = require('../models/userGroup');
+const User = require('../models/user')
 exports.getChatPage =( req,res,next) =>{
   
   res.sendFile(path.join(__dirname,'../','public','views','msgBox.html'));
@@ -52,10 +53,10 @@ exports.getGroups =( req,res, next) =>{
           groupIds[i] = groups[i].groupId;
 
        }
-       console.log(groupIds);
+      // console.log(groupIds);
 
        Group.findAll({where: {id : groupIds},
-         attributes:['name']
+         attributes:['id','name']
          
       })
        .then((groupsName) =>{
@@ -70,4 +71,56 @@ exports.getGroups =( req,res, next) =>{
       console.log(err)
     })
 
+};
+
+exports.postInUserGroup = (req,res,next) =>{
+     
+     const userId = req.body.userId;
+      const groupId = req.body.GroupId;
+
+      UsersInGroups.create({
+        userId: userId,
+        groupId: groupId
+
+      })
+      .then(() =>{
+        res.status(200).json({success: true, message : 'user added in group'});
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+};
+
+exports.postSeeUsersInGroup = (req,res,next) =>{
+      
+        const groupId = req.body.groupId;
+
+        UsersInGroups.findAll({where:{groupId: groupId},
+
+            attributes:['userId']
+        })
+        .then((users)=>{
+              
+            
+              const userIds = [];
+
+              for(let i=0; i< users.length ; i++){
+                userIds[i] = users[i].userId
+              }
+          
+            User.findAll({where:{id: userIds},
+               attributes:['name']
+            })
+            .then((result) =>{
+                   res.status(200).json({success: true, users: result});
+            })
+            .catch((err)=>{
+              console.log(err)
+            })   
+          
+
+        })
+        .catch((err) =>{
+          console.log(err)
+        })
 };
