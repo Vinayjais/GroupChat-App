@@ -2,11 +2,13 @@
 
 
 window.addEventListener('DOMContentLoaded', ()=>{
-    fetchData();
+   const groupId = localStorage.removeItem('current_groupId');
+    
+   // fetchData();
     GroupinPanel();
 });
 
- setInterval( async() => {
+ /*setInterval( async() => {
 
   const token = localStorage.getItem('token');
   const groupid = localStorage.getItem('current_groupId');
@@ -34,7 +36,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
      console.log(err)
   })
   
-}, 1000);
+}, 1000);*/
 
 
 async function fetchData(){
@@ -115,6 +117,8 @@ async function addToMsgBox(msg,userId){
 
 }
 
+
+
 async function GroupinPanel (){
 
    function GroupList(group){
@@ -122,12 +126,14 @@ async function GroupinPanel (){
       const groupPanel = document.getElementById('groupPanel');
   
        const li = document.createElement('li');
+       
       
        const groupName = document.createTextNode(group.name);
        li.appendChild(groupName);
 
        groupPanel.appendChild(li);
        li.addEventListener('click', function groupMessage  () {
+
 
            localStorage.setItem('current_groupId', group.id);
            const GName = document.getElementById('headGroupName');
@@ -141,6 +147,11 @@ async function GroupinPanel (){
             const msgBoxDiv = document.createElement('div');
             msgBoxDiv.id = 'msgBox';
             Box.appendChild(msgBoxDiv);
+            const groupId = localStorage.getItem('current_groupId');
+            const room = `group${groupId}`;
+
+            socket.emit('join-room',room);
+
            fetchData();
        });
 
@@ -198,6 +209,7 @@ async function SearchUsers(){
       li.appendChild(space)
       li.appendChild(addbtn)
       ul.appendChild(li);
+      document.getElementById('search').value = '';
 
       addbtn.addEventListener('click', addToGroup);
 

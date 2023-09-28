@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('v-chat','vinay','vinay2410',{
+const sequelize = new Sequelize('v-chat','root','241021@Vinay',{
     dialect: 'mysql',
-    host: 'database-1.c4ydiiv1lqn6.eu-north-1.rds.amazonaws.com'
+    host: 'localhost'
 });
 
 module.exports = sequelize;
