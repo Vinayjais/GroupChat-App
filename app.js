@@ -18,7 +18,7 @@ const http = require('http').createServer(app);
 
 const io = require('socket.io')(http)
 
-const users = {}
+
 
 /*io.on('connection', socket => {
   console.log(socket.id)
@@ -36,7 +36,8 @@ const users = {}
 }) */
 
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended:false}));
+
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'public','css')));
 app.use(express.static(path.join(__dirname,'public','js')));
 app.use(express.static(path.join(__dirname,'public','views')));
@@ -65,6 +66,7 @@ io.on('connection', (socket) => {
   
   socket.on('chat message',(msg, room) => {
     console.log(socket.id)
+  
     socket.to(room).emit('chat message', msg);
   });
 

@@ -18,22 +18,16 @@
     <style>
         body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   
-        #send-container { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-        #messageInp{ border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #messageInp:focus { outline: none; }
-        #send-container > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-  
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages > li { padding: 0.5rem 1rem; }
-        #messages > li:nth-child(odd) { background: #efefef; }
+       
       </style>
 </head>
 <body>
 
     <div class="container-fluid panel">
         <div class="groupBox">
-            <input type="text" name="GroupName" id="GroupName" placeholder="Group Name" required>
-            <input type="button"  onclick="CreateGroup()" value="Create Group">
+      
+            <input type="text" name="GroupName" id="GroupName" placeholder="Enter Name" required>
+            <input type=" submit" class="btn btn-primary" onclick="CreateGroup()" value="Create Group">
            <ul id="groupPanel">
              
             
@@ -41,7 +35,22 @@
 
         </div>
        <div class="container msg-box" >
-           <div class=" chatBoxHeader"><h5 id="headGroupName" > </h5><div><button onclick="AddUserInGroup()">Add</button><button id="viewBtn" onclick="seeUserInGroup()">See</button></div></div>
+           <div class=" chatBoxHeader"><h5 id="headGroupName" > </h5>
+            
+            <div id="headerBtn">
+                 <div id="addBtn" ><button   onclick="AddUserInGroup()">Add</button></div>
+                 <div id="viewBtn">  <button  onclick="seeUserInGroup()">See</button></div>
+                 <div id="userName"></div>
+                 <Div>
+                  <form  id="form" enctype="multipart/form-data">
+                    <input type="file" name="image" id="file" accept="image/*"  onchange="sendImage(this)">
+                 
+            
+                    </form>
+                 </Div>
+               
+          </div>
+          </div>
           
            <div id="Box">
                <div id="msgBox">
@@ -49,7 +58,7 @@
 
                   <input type="button" value="X" onclick="hideAddUserPanel()">
                  
-                  <div class="addUserPanel-child">
+                  <div class="addUserPanel-child" id="SearchUsers" style="display: none;">
                       <h5> Add Participents</h5>
                      
                           <input type="email" name="search" id="search" placeholder="Enter Email" required>
@@ -81,13 +90,21 @@
                </div>
 
            </div>
-           <form action="msg-send" method="post" id="send-container" onsubmit="msgAuth()">
-            <input type="text" name="message" id="messageInp" required placeholder="Enter message" >
-            <button class="btn " type="submit">Send</button>
-      </form>
-
+          
+          
        </div>
+      
     </div>
+    <div >
+      
+
+        <div>
+          <form action="msg-send" method="post" id="send-container">
+            <input type="text" name="message" id="messageInp" class="form-control" placeholder="Enter message" >
+            <button class="btn btn-success " type="submit" onclick="msgAuth()">Send</button>
+          </form>
+        </div>
+     </div>
      
   
     
@@ -117,8 +134,13 @@
 
       socket.on('chat message', (msg) => {
         const item = document.createElement('div');
+        const img = document.createElement('img');
+        img.src = msg;
+        img.style.maxHeight = '200px';
+         img.style.maxWidth ='200px';
         item.classList ='container message left'
-        item.textContent = ' other:'+ msg;
+        item.textContent = ' other :'+ msg;
+        item.appendChild(img)
         messages.appendChild(item);
         messages.scrollTo(0, document.body.scrollHeight);
       });
@@ -130,10 +152,18 @@
   const div = document.getElementById('msgBox');
   const message = document.getElementById('messageInp').value;
   const messageDiv = document.createElement('div');
+  const img = document.createElement('img');
+     img.src = message;
+     img.style.maxHeight = '200px';
+     img.style.maxWidth ='200px';
   messageDiv.classList ="container message right";
-  const textNode = document.createTextNode(message);
+  const textNode = document.createTextNode(`you : ${message}`);
+    
     messageDiv.appendChild(textNode);
+    messageDiv.appendChild(img);
     div.appendChild(messageDiv);
+    messages.scrollTo(0, document.body.scrollHeight);
+
 
  }
 
@@ -141,6 +171,7 @@
       const token = localStorage.getItem('token');
       const groupId = localStorage.getItem('current_groupId');
      const message = document.getElementById('messageInp').value;
+     try {
       axios.post('http://localhost:4000/msg-send',{message, groupId},{headers:{"Authorization": token}})
       .then((Response) =>{
            
@@ -151,6 +182,13 @@
       .catch((err)=>{
         console.log(err)
       })
+
+     } catch (error) {
+        console.log(error)
+     }
+      
+    
+
 
 
   }

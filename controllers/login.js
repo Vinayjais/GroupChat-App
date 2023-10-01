@@ -22,7 +22,7 @@ exports.postValidiateUser = async (req,res,next) =>{
     
                  bcrypt.compare(password, user.password,(err,result)=>{
                     if( result === true){
-                        res.status(200).json({success : true , Message: "Login Successfull",token:generateWebToken(user.id)});
+                        res.status(200).json({success : true ,Name: user.name, Message: "Login Successfull",token:generateWebToken(user.id)});
                     }
                     else{
                         res.status(500).json({success : false , Message: "You entered wrong password."});

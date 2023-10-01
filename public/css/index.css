@@ -17,16 +17,18 @@ body{
      border: black 2px solid;
      border-radius: 10px;
     margin: auto;
-    height: 77vh;
+    margin-top: 15px;
+    height: 80vh;
     padding: 5px;
     overflow-y: auto;
-    margin-bottom: 20px;
+    
+  
 }
 
 
 .message{
     background-color: rgb(222, 222, 222);
-   max-width: 50%;
+    max-width: 50%;
     padding: 10px;
     margin: 17px 12px;
     border: black solid 2px;
@@ -63,17 +65,20 @@ body{
 }
 .groupBox{
     min-width:100px;
-    height: 500px;
+    height: 80vh;
+    margin: 15px;
     background-color: white;
-    padding-top: 10px;
+
     padding: 10px;
     border: 2px solid black;
     border-radius: 5px;
     overflow-y: auto;
+
 }
 .panel{
     display: flex;
     justify-content: space-between;
+    
 }
 .chatBoxHeader{
     display: flex;
@@ -82,11 +87,14 @@ body{
     max-width: 100%;
     min-height: 35px;
     background-color: rgb(180, 180, 180);
+    position: fixed;
 }
 
 #addUserPanel{
     background-color: darkgray;
     display:none;
+    position: fixed;
+     top:70px
    
 
     
@@ -94,4 +102,14 @@ body{
 #membersofgroup{
     min-width: 200px;
     overflow-y: auto;
+}
+
+#msgBox{
+    margin-top: 20px;
+}
+#headerBtn{
+    display: flex;
+}
+#addBtn{
+     display: none;
 }

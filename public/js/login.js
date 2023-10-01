@@ -6,8 +6,9 @@ async function GetResponse(){
    await axios.post('http://localhost:4000/validiate-user',{email,password})
   .then( (response) =>{
 
-          console.log('in response')
+          
            localStorage.setItem('token', response.data.token);
+           localStorage.setItem('UserName', response.data.Name)
 
             window.location.href = '/vchat';
               

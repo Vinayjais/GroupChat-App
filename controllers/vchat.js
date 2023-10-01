@@ -124,3 +124,28 @@ exports.postSeeUsersInGroup = (req,res,next) =>{
           console.log(err)
         })
 };
+
+
+exports.postFindAdmin =( req,res,next) =>{
+  const groupId = req.body.groupid;
+  const user = req.user.id;
+  
+   Group.findOne({where:{ id:groupId}})
+   .then((result)=>{
+      if(result.userId === user){
+        res.status(200).json({isAdmin : true , admin: result.userId})
+
+      }
+      else{
+       res.status(200).json({isAdmin : false})
+
+      }
+
+   })
+   .catch((err) =>{
+    res.status(200).json({isAdmin : false})
+
+    console.log(err)
+   })
+
+}

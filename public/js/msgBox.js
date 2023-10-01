@@ -1,8 +1,14 @@
 
 
 
+
 window.addEventListener('DOMContentLoaded', ()=>{
    const groupId = localStorage.removeItem('current_groupId');
+   const userName= localStorage.getItem('UserName');
+     const user = document.getElementById('userName');
+     const text = document.createTextNode(userName)
+     user.appendChild(text);
+
     
    // fetchData();
     GroupinPanel();
@@ -37,6 +43,34 @@ window.addEventListener('DOMContentLoaded', ()=>{
   })
   
 }, 1000);*/
+
+  async function findAdminOfGroup(){
+     const groupid = localStorage.getItem('current_groupId');
+     const token = localStorage.getItem('token');
+
+     await axios.post('/find_admin',{groupid},{headers:{"Authorization": token}})
+     .then((result) =>{
+      
+         if(result.data.isAdmin === true){
+            GroupAmin();
+            localStorage.setItem('isAdmin', result.data.isAdmin );
+         }
+     })
+
+     .catch((err)=>{
+      console.log(err)
+     })
+      
+     
+  }
+
+ function GroupAmin(){
+   const addBtn = document.getElementById('addBtn').style.display = 'inline-block';
+   const searchUser = document.getElementById('SearchUsers').style.display = 'inline-block';
+
+    
+
+ }
 
 
 async function fetchData(){
@@ -97,21 +131,24 @@ async function addToMsgBox(msg,userId){
  async function CreateGroup(){
    
     const groupName = document.getElementById('GroupName').value;
-    const token = localStorage.getItem('token');
-    await axios.post('http://localhost:4000/groupcreate',{groupName}, {headers:{"Authorization": token}})
-    .then((response)=>{
-       if(response.data.success === true){
+    if(groupName){
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:4000/groupcreate',{groupName}, {headers:{"Authorization": token}})
+      .then((response)=>{
+         if(response.data.success === true){
+           
+           alert(`${groupName} Group Created`);
+          document.getElementById('GroupName').value = '';
+         }
+        
          
-         alert(`${groupName} Group Created`);
-        document.getElementById('GroupName').value = '';
-       }
-      
-       
-    })
-    .catch((err) =>{
-       console.log(err);
-    })
-
+      })
+      .catch((err) =>{
+         console.log(err);
+      })
+  
+    }
+   
 
 
 
@@ -126,6 +163,7 @@ async function GroupinPanel (){
       const groupPanel = document.getElementById('groupPanel');
   
        const li = document.createElement('li');
+         
        
       
        const groupName = document.createTextNode(group.name);
@@ -151,7 +189,7 @@ async function GroupinPanel (){
             const room = `group${groupId}`;
 
             socket.emit('join-room',room);
-
+            findAdminOfGroup();
            fetchData();
        });
 
@@ -237,12 +275,28 @@ async function SearchUsers(){
 }
 
 async function seeUserInGroup(){
-
+          
+    
      function participentsOfGroup(member){
          const ul = document.getElementById('membersofgroup');
          const li = document.createElement('li');
+          li.id= "liuser";
+         
          const text = document.createTextNode(member.name);
          li.appendChild(text);
+          if(localStorage.getItem('isAdmin') === true){
+            const liuser = document.getElementById('liuser');
+            const remove = document.createTextNode('-');
+            const button = document.createElement('button');
+             button.appendChild(remove);
+               liuser.appendChild(button);
+   
+          button.addEventListener('click', function(){
+           
+       });
+          }
+      
+        
          ul.appendChild(li);
 
      }
@@ -266,4 +320,23 @@ async function seeUserInGroup(){
       console.log(err)
    })
 
+}
+
+async function sendImage(event){
+   
+
+    const file = event.files[0];
+    console.log(file);
+    const formData = new FormData();
+    formData.append('image', file)
+    await axios.post('http://localhost:4000/send-image', formData, {headers:{'Content-Type': 'multipart/form-data'}}) 
+    .then((result) =>{
+       const imgUrl = result.data.imgUrl;
+        console.log(imgUrl)
+        document.getElementById('messageInp').value = imgUrl;
+
+    })
+    .catch((err) =>{
+      console.log(err)
+    })
 }
